@@ -1,0 +1,139 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics for {{ long_url }}</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 30px;
+            padding: 30px;
+            border-radius: 12px;
+            background-color: #e9ecef; /* Light gray background */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .header {
+            padding: 20px;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            background-color: #e7f0ff;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        .header h2 {
+            color: #007bff;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 123, 255, 0.5);
+        }
+        .total-clicks {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #343a40;
+            text-align: center;
+            padding: 15px;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            background-color: #e7f0ff;
+            margin-bottom: 40px;
+        }
+        .chart-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .chart-box {
+            flex: 1 1 45%;
+            padding: 20px;
+            margin: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            background-color: #f1f1f1;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .chart-box h3 {
+            color: #fff;
+            background-color: #007bff;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin-bottom: 15px;
+        }
+        canvas {
+            width: 100% !important;
+            height: 350px !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Analytics for {{ long_url }}</h2>
+        </div>
+        <div class="total-clicks">
+            Total Clicks: <strong>{{ clicks }}</strong>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-box">
+                <h3>Device Clicks</h3>
+                <canvas id="deviceClicksChart"></canvas>
+            </div>
+
+            <div class="chart-box">
+                <h3>Country Clicks</h3>
+                <canvas id="countryClicksChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const deviceClicksData = {
+            labels: [{% for device in device_clicks.keys %}'{{ device }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+            datasets: [{
+                data: [{% for count in device_clicks.values %}{{ count }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+                backgroundColor: ['#007bff', '#28a745', '#dc3545', '#ffc107', '#17a2b8'],
+                hoverOffset: 4
+            }]
+        };
+
+        const deviceClicksConfig = {
+            type: 'pie',
+            data: deviceClicksData
+        };
+
+        new Chart(document.getElementById('deviceClicksChart'), deviceClicksConfig);
+
+        const countryClicksData = {
+            labels: [{% for country in country_clicks.keys %}'{{ country }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+            datasets: [{
+                label: 'Clicks',
+                data: [{% for count in country_clicks.values %}{{ count }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+                backgroundColor: '#007bff'
+            }]
+        };
+
+        const countryClicksConfig = {
+            type: 'bar',
+            data: countryClicksData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        };
+
+        new Chart(document.getElementById('countryClicksChart'), countryClicksConfig);
+    </script>
+</body>
+</html>

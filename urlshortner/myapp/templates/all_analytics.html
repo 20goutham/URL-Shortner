@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Links Analytics</title>
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'style.css' %}" type="text/css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        h1 {
+            color: #343a40;
+            font-size: 2.5rem;
+            font-weight: bold;
+            background-color: #007bff;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .url_options {
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .url_link {
+            color: #007bff;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .url_link:hover {
+            color: #0056b3;
+        }
+
+        .short_url_l {
+            color: #17a2b8;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .short_url_l:hover {
+            color: #138496;
+        }
+
+        .text-muted {
+            color: #6c757d !important;
+        }
+
+        .allClicks {
+            color: #28a745;
+            font-size: 1.2em;
+        }
+
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <main id="content" role="main" class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 text-center mb-4">
+                    <h1>All Links Analytics</h1>
+                </div>
+                {% for obj in rows|dictsortreversed:"date" %}
+                <div class="col-md-8 url_options" id="link-{{ forloop.counter }}">
+                    <p class="text-muted">{{ obj.date }}</p>
+                    
+                    <!-- Long URL Clickable -->
+                    <p class="url_link">
+                        <a href="{{ obj.long_url }}" target="_blank">{{ obj.long_url }}</a>
+                    </p>
+
+                    <!-- Short URL Clickable -->
+                    <p class="short_url">
+                        <a href="{% url 'redirect_url' obj.short_url %}" class="short_url_l" target="_blank">{{ obj.short_url }}</a>
+                    </p>
+
+                    <div class="stats_total">
+                        <div>Total clicks: <strong class="allClicks">{{ obj.clicks }}</strong></div>
+                    </div>
+                    <div class="text-center mt-3">
+                        <!-- View Analytics Button -->
+                        <a href="{% url 'analytics' obj.short_url %}" class="btn btn-custom">View Analytics</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+
+    <script src="{% static 'bootstrap.bundle.min.js' %}"></script>
+</body>
+
+</html>

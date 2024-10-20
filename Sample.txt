@@ -1,0 +1,13 @@
+
+
+Hello this is Khatravat Goutham Rathod 
+
+I want to share my Django Project - URL Shortner Demo 
+
+First lets activate virtual env
+
+Then start the server 
+
+Let me go to the folder urlshortner
+
+server started on 8000 port
